@@ -46,7 +46,7 @@
             width: 100%;
             height: 100%;
             background-image: radial-gradient(circle, rgba(64, 164, 255, 0.2) 0%, transparent 40%),
-                                  radial-gradient(circle, rgba(255, 0, 127, 0.2) 0%, transparent 40%);
+                              radial-gradient(circle, rgba(255, 0, 127, 0.2) 0%, transparent 40%);
             background-size: 50% 50%, 50% 50%;
             background-position: top left, bottom right;
             pointer-events: none;
@@ -139,11 +139,13 @@
             background: rgba(64, 164, 255, 0.2);
             font-weight: 700;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 10px var(--electric-blue);
+            animation: pulse-blue 1.5s infinite alternate;
         }
 
         nav .btn:hover:not(.active) {
             background: rgba(255, 255, 255, 0.05);
             color: var(--neon-blue);
+            transform: scale(1.05);
         }
 
         .input-group {
@@ -187,29 +189,29 @@
             background-position: right 15px center;
             padding-right: 40px;
         }
-        /* --- MODIFIED CODE FOR SMALLER BUTTONS --- */
+        
         .btn.submit {
             background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
             color: #fff;
             border: none;
-            padding: 10px 20px; /* Reduced padding */
+            padding: 10px 20px;
             border-radius: 10px;
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 0.9rem; /* Reduced font size */
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0, 240, 255, 0.4), 0 3px 10px rgba(255, 0, 127, 0.4); /* Scaled down shadow */
+            box-shadow: 0 3px 10px rgba(0, 240, 255, 0.4), 0 3px 10px rgba(255, 0, 127, 0.4);
             width: 100%;
             margin-top: 10px;
         }
 
         .btn.submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 240, 255, 0.6), 0 6px 15px rgba(255, 0, 127, 0.6); /* Scaled down hover shadow */
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 15px rgba(0, 240, 255, 0.6), 0 6px 15px rgba(255, 0, 127, 0.6);
             filter: brightness(1.1);
         }
-        /* ------------------------------------------- */
+        
         .btn.submit:active {
             transform: translateY(0);
         }
@@ -224,11 +226,13 @@
             font-weight: 500;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
             word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .result-label {
             font-size: 0.9rem;
-            margin-bottom: 5px;
             opacity: 0.8;
             color: var(--neon-blue);
         }
@@ -237,6 +241,24 @@
             font-size: 1.1rem;
             font-weight: 700;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            flex-grow: 1;
+        }
+
+        .result .icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        
+        .result .icon.success {
+            color: #00FF7F;
+            text-shadow: 0 0 10px #00FF7F;
+            animation: neon-pulse 1s ease-in-out infinite alternate;
+        }
+
+        .result .icon.error {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+            animation: shake 0.5s;
         }
         
         .add-inputs {
@@ -259,6 +281,22 @@
             .container {
                 padding: 10px;
             }
+        }
+        
+        @keyframes pulse-blue {
+            from { box-shadow: 0 0 5px var(--electric-blue), inset 0 2px 5px rgba(0, 0, 0, 0.2); }
+            to { box-shadow: 0 0 20px var(--electric-blue), inset 0 2px 5px rgba(0, 0, 0, 0.2); }
+        }
+
+        @keyframes neon-pulse {
+            from { text-shadow: 0 0 5px #00FF7F; }
+            to { text-shadow: 0 0 15px #00FF7F, 0 0 25px #00FF7F; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
     </style>
 </head>
@@ -433,7 +471,7 @@
             
             if (!isValidNumber(value, 10)) {
                 input.classList.add('error');
-                result.innerHTML = '<div class="result-label error">❌ Invalid decimal number!</div>';
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Invalid decimal number!</div>`;
                 return;
             }
             
@@ -443,8 +481,9 @@
             const hex = decimal.toString(16).toUpperCase();
             
             result.innerHTML = `
-                <div class="result-label">CONVERSION RESULTS:</div>
+                <span class="icon success">✅</span>
                 <div class="result-value">
+                    <div class="result-label">CONVERSION RESULTS:</div>
                     Binary: ${binary}<br>
                     Octal: ${octal}<br>
                     Hexadecimal: ${hex}
@@ -463,7 +502,7 @@
             if (!isValidNumber(value, base)) {
                 input.classList.add('error');
                 const baseName = base === 2 ? 'binary' : base === 8 ? 'octal' : 'hexadecimal';
-                result.innerHTML = `<div class="result-label error">❌ Invalid ${baseName} number!</div>`;
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Invalid ${baseName} number!</div>`;
                 return;
             }
             
@@ -471,8 +510,9 @@
             const baseName = { 2: 'Binary', 8: 'Octal', 16: 'Hexadecimal' }[base];
             
             result.innerHTML = `
-                <div class="result-label">CONVERSION RESULT:</div>
+                <span class="icon success">✅</span>
                 <div class="result-value">
+                    <div class="result-label">CONVERSION RESULT:</div>
                     ${baseName} ${value} = Decimal ${decimal}
                 </div>
             `;
@@ -506,7 +546,7 @@
             }
 
             if (hasError) {
-                result.innerHTML = `<div class="result-label error">❌ Please enter valid numbers and select their bases!</div>`;
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Please enter valid numbers and select their bases!</div>`;
                 return;
             }
 
@@ -519,8 +559,9 @@
             const hexResult = sum.toString(16).toUpperCase();
 
             result.innerHTML = `
-                <div class="result-label">RESULTS OF ADDITION:</div>
+                <span class="icon success">✅</span>
                 <div class="result-value">
+                    <div class="result-label">RESULTS OF ADDITION:</div>
                     Decimal: ${sum}<br>
                     Binary: ${binaryResult}<br>
                     Octal: ${octalResult}<br>
@@ -540,13 +581,13 @@
             
             if (message === '') {
                 messageInput.classList.add('error');
-                result.innerHTML = '<div class="result-label error">❌ Please enter a message!</div>';
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Please enter a message!</div>`;
                 return;
             }
             
             if (isNaN(key)) {
                 keyInput.classList.add('error');
-                result.innerHTML = '<div class="result-label error">❌ Please enter a valid decimal key!</div>';
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Please enter a valid decimal key!</div>`;
                 return;
             }
             
@@ -561,8 +602,9 @@
             }
             
             result.innerHTML = `
-                <div class="result-label">ENCODING RESULTS:</div>
+                <span class="icon success">✅</span>
                 <div class="result-value">
+                    <div class="result-label">ENCODING RESULTS:</div>
                     Encoded (decimal values): [${decimalValues.join(', ')}]<br>
                     Encoded (hex values): ['${hexValues.join("', '")}']
                 </div>
@@ -580,13 +622,13 @@
             
             if (valuesString === '') {
                 valuesInput.classList.add('error');
-                result.innerHTML = '<div class="result-label error">❌ Please enter encoded decimal values!</div>';
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Please enter encoded decimal values!</div>`;
                 return;
             }
             
             if (isNaN(key)) {
                 keyInput.classList.add('error');
-                result.innerHTML = '<div class="result-label error">❌ Please enter a valid decimal key!</div>';
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Please enter a valid decimal key!</div>`;
                 return;
             }
             
@@ -594,7 +636,7 @@
             
             if (decimalValues.some(isNaN)) {
                 valuesInput.classList.add('error');
-                result.innerHTML = '<div class="result-label error">❌ Invalid input format! Please enter comma-separated numbers.</div>';
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Invalid input format! Please enter comma-separated numbers.</div>`;
                 return;
             }
             
@@ -605,8 +647,9 @@
             }
             
             result.innerHTML = `
-                <div class="result-label">DECODING RESULT:</div>
+                <span class="icon success">✅</span>
                 <div class="result-value">
+                    <div class="result-label">DECODING RESULT:</div>
                     Decoded Message: ${decodedMessage}
                 </div>
             `;
@@ -641,5 +684,3 @@
     </script>
 </body>
 </html>
-
-can you add more UI design to make it fun and interactive
