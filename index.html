@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Number System Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .menu {
+      margin: 20px auto;
+      width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eee;
+      border-radius: 8px;
+      text-align: left;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <h1>Number System Menu</h1>
+  <div class="menu">
+    <button onclick="decimalToOthers()">1. Convert Decimal to Binary/Octal/Hex</button>
+    <button onclick="othersToDecimal()">2. Convert Binary/Octal/Hex to Decimal</button>
+    <button onclick="addNumbers()">3. Add Two Numbers in Any Base</button>
+    <button onclick="encodeMessage()">4. Secret Code Translator (Encode)</button>
+    <button onclick="decodeMessage()">5. Secret Code Translator (Decode)</button>
+    <button onclick="exitProgram()">6. Exit</button>
+  </div>
+  <div id="output"></div>
+
+  <script>
+    function decimalToOthers() {
+      let num = parseInt(prompt("Enter decimal number:"));
+      let bin = num.toString(2);
+      let oct = num.toString(8);
+      let hex = num.toString(16).toUpperCase();
+      document.getElementById("output").innerText =
+        `Decimal: ${num}\nBinary: ${bin}\nOctal: ${oct}\nHex: ${hex}`;
+    }
+
+    function othersToDecimal() {
+      let value = prompt("Enter number:");
+      let base = parseInt(prompt("Enter its base (2, 8, 10, 16):"));
+      let dec = parseInt(value, base);
+      document.getElementById("output").innerText = `Decimal: ${dec}`;
+    }
+
+    function addNumbers() {
+      let num1 = prompt("Enter first number:");
+      let base1 = parseInt(prompt("Enter its base (2, 8, 10, 16):"));
+      let num2 = prompt("Enter second number:");
+      let base2 = parseInt(prompt("Enter its base (2, 8, 10, 16):"));
+
+      let dec1 = parseInt(num1, base1);
+      let dec2 = parseInt(num2, base2);
+      let sum = dec1 + dec2;
+
+      document.getElementById("output").innerText =
+        `Results of Addition:\nDecimal: ${sum}\nBinary: ${sum.toString(2)}\nOctal: ${sum.toString(8)}\nHex: ${sum.toString(16).toUpperCase()}`;
+    }
+
+    function encodeMessage() {
+      let msg = prompt("Enter message:");
+      let key = parseInt(prompt("Enter secret key (decimal):"));
+      let encodedDec = [];
+      let encodedHex = [];
+
+      for (let char of msg) {
+        let code = char.charCodeAt(0) + key;
+        encodedDec.push(code);
+        encodedHex.push(code.toString(16).toUpperCase());
+      }
+
+      document.getElementById("output").innerText =
+        `Encoded (decimal values): [${encodedDec.join(", ")}]\nEncoded (hex values): [${encodedHex.join(", ")}]`;
+    }
+
+    function decodeMessage() {
+      let values = prompt("Enter encoded decimal values (comma separated):");
+      let key = parseInt(prompt("Enter secret key (decimal):"));
+      let nums = values.split(",").map(v => parseInt(v.trim()));
+      let decoded = nums.map(n => String.fromCharCode(n - key)).join("");
+      document.getElementById("output").innerText =
+        `Decoded Message: ${decoded}`;
+    }
+
+    function exitProgram() {
+      document.getElementById("output").innerText = "Exiting program. Goodbye!";
+    }
+  </script>
+</body>
+</html>
