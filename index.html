@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Converter</title>
+    <title>Celestial Converter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,9 +12,9 @@
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-color: #f0f0f0;
-            --neon-blue: #00F0FF;
-            --electric-blue: #40A4FF;
-            --neon-pink: #FF007F;
+            --lavender: #D7A8FF;
+            --soft-purple: #5C258D;
+            --vibrant-pink: #FF00A2;
             --deep-purple: #1a0033;
             --shadow-color: rgba(0, 0, 0, 0.2);
         }
@@ -45,8 +45,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(circle, rgba(64, 164, 255, 0.2) 0%, transparent 40%),
-                              radial-gradient(circle, rgba(255, 0, 127, 0.2) 0%, transparent 40%);
+            background-image: radial-gradient(circle, rgba(215, 168, 255, 0.2) 0%, transparent 40%),
+                              radial-gradient(circle, rgba(255, 0, 162, 0.2) 0%, transparent 40%);
             background-size: 50% 50%, 50% 50%;
             background-position: top left, bottom right;
             pointer-events: none;
@@ -62,30 +62,15 @@
         .container {
             max-width: 900px;
             width: 100%;
-            position: relative;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px var(--shadow-color);
-            padding: 30px;
-            display: none;
+            display: flex;
             flex-direction: column;
             gap: 20px;
-            animation: fadeIn 0.5s ease-in-out forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .glass-card.active {
+        .main-content {
             display: flex;
+            gap: 20px;
+            flex-grow: 1;
         }
 
         .header {
@@ -96,9 +81,9 @@
         .title {
             font-size: clamp(2rem, 5vw, 2.5rem);
             font-weight: 700;
-            text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
+            text-shadow: 0 0 15px var(--lavender), 0 0 25px var(--lavender);
             margin-bottom: 5px;
-            color: var(--neon-blue);
+            color: var(--lavender);
         }
 
         .subtitle {
@@ -114,38 +99,61 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 4px 16px var(--shadow-color);
-            margin-bottom: 20px;
             padding: 10px;
             display: flex;
-            justify-content: space-around;
+            flex-direction: column;
             gap: 10px;
-            flex-wrap: wrap;
+            height: fit-content;
         }
 
         nav .btn {
             background: transparent;
             border: none;
             color: var(--text-color);
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 10px;
-            flex-grow: 1;
+            text-align: left;
         }
         
         nav .btn.active {
-            background: rgba(64, 164, 255, 0.2);
+            background: rgba(215, 168, 255, 0.2);
             font-weight: 700;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 10px var(--electric-blue);
-            animation: pulse-blue 1.5s infinite alternate;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 10px var(--lavender);
+            animation: pulse-lavender 1.5s infinite alternate;
         }
 
         nav .btn:hover:not(.active) {
             background: rgba(255, 255, 255, 0.05);
-            color: var(--neon-blue);
+            color: var(--lavender);
             transform: scale(1.05);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px var(--shadow-color);
+            padding: 30px;
+            flex-grow: 1;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card.active {
+            display: flex;
         }
 
         .input-group {
@@ -157,7 +165,7 @@
             margin-bottom: 8px;
             font-weight: 500;
             opacity: 0.9;
-            color: var(--neon-blue);
+            color: var(--lavender);
         }
 
         .input, .select {
@@ -176,22 +184,22 @@
         .input:focus, .select:focus {
             outline: none;
             background: rgba(0, 0, 0, 0.6);
-            border-color: var(--neon-blue);
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4), 0 0 10px var(--neon-blue);
+            border-color: var(--lavender);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4), 0 0 10px var(--lavender);
         }
         
         .select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300F0FF' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D7A8FF' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 15px center;
             padding-right: 40px;
         }
         
         .btn.submit {
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            background: linear-gradient(90deg, var(--lavender), var(--vibrant-pink));
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -201,14 +209,14 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0, 240, 255, 0.4), 0 3px 10px rgba(255, 0, 127, 0.4);
+            box-shadow: 0 3px 10px rgba(215, 168, 255, 0.4), 0 3px 10px rgba(255, 0, 162, 0.4);
             width: 100%;
             margin-top: 10px;
         }
 
         .btn.submit:hover {
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 6px 15px rgba(0, 240, 255, 0.6), 0 6px 15px rgba(255, 0, 127, 0.6);
+            box-shadow: 0 6px 15px rgba(215, 168, 255, 0.6), 0 6px 15px rgba(255, 0, 162, 0.6);
             filter: brightness(1.1);
         }
         
@@ -234,7 +242,7 @@
         .result-label {
             font-size: 0.9rem;
             opacity: 0.8;
-            color: var(--neon-blue);
+            color: var(--lavender);
         }
 
         .result-value {
@@ -250,14 +258,14 @@
         }
         
         .result .icon.success {
-            color: #00FF7F;
-            text-shadow: 0 0 10px #00FF7F;
-            animation: neon-pulse 1s ease-in-out infinite alternate;
+            color: #A8FFD7;
+            text-shadow: 0 0 10px #A8FFD7;
+            animation: neon-pulse-green 1s ease-in-out infinite alternate;
         }
 
         .result .icon.error {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink);
+            color: var(--vibrant-pink);
+            text-shadow: 0 0 10px var(--vibrant-pink);
             animation: shake 0.5s;
         }
         
@@ -268,29 +276,24 @@
         }
 
         .error {
-            border-color: var(--neon-pink) !important;
-            box-shadow: 0 0 10px var(--neon-pink) !important;
+            border-color: var(--vibrant-pink) !important;
+            box-shadow: 0 0 10px var(--vibrant-pink) !important;
         }
 
         @media (max-width: 600px) {
-            nav {
+            .main-content {
                 flex-direction: column;
-                padding: 5px;
-            }
-
-            .container {
-                padding: 10px;
             }
         }
         
-        @keyframes pulse-blue {
-            from { box-shadow: 0 0 5px var(--electric-blue), inset 0 2px 5px rgba(0, 0, 0, 0.2); }
-            to { box-shadow: 0 0 20px var(--electric-blue), inset 0 2px 5px rgba(0, 0, 0, 0.2); }
+        @keyframes pulse-lavender {
+            from { box-shadow: 0 0 5px var(--lavender), inset 0 2px 5px rgba(0, 0, 0, 0.2); }
+            to { box-shadow: 0 0 20px var(--lavender), inset 0 2px 5px rgba(0, 0, 0, 0.2); }
         }
 
-        @keyframes neon-pulse {
-            from { text-shadow: 0 0 5px #00FF7F; }
-            to { text-shadow: 0 0 15px #00FF7F, 0 0 25px #00FF7F; }
+        @keyframes neon-pulse-green {
+            from { text-shadow: 0 0 5px #A8FFD7; }
+            to { text-shadow: 0 0 15px #A8FFD7, 0 0 25px #A8FFD7; }
         }
 
         @keyframes shake {
@@ -303,130 +306,131 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">Number System Menu</h1>
+            <h1 class="title">Celestial Converter</h1>
             <p class="subtitle">CPE463 - Programming Activity 1</p>
         </div>
 
-        <nav>
-            <button class="btn active" data-target="decimal-card">From Decimal</button>
-            <button class="btn" data-target="to-decimal-card">To Decimal</button>
-            <button class="btn" data-target="add-card">Add Numbers</button>
-            <button class="btn" data-target="encode-card">Encode</button>
-            <button class="btn" data-target="decode-card">Decode</button>
-            <button class="btn" data-target="exit-card">Exit</button>
-        </nav>
-
-        <section id="decimal-card" class="glass-card active">
-            <h2>Convert Decimal to Binary/Octal/Hex</h2>
-            <div class="input-group">
-                <label for="decimal-input" class="label">Enter Decimal Number:</label>
-                <input type="text" id="decimal-input" class="input" placeholder="e.g., 15">
-            </div>
-            <button class="btn submit" onclick="convertFromDecimal()">Convert</button>
-            <div class="result" id="decimal-result">
-                <div class="result-label">Results will appear here...</div>
-            </div>
-        </section>
-
-        <section id="to-decimal-card" class="glass-card">
-            <h2>Convert Binary/Octal/Hex to Decimal</h2>
-            <div class="input-group">
-                <label for="base-select" class="label">Select Base:</label>
-                <select id="base-select" class="select">
-                    <option value="2">Binary (Base 2)</option>
-                    <option value="8">Octal (Base 8)</option>
-                    <option value="16">Hexadecimal (Base 16)</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label for="base-input" class="label">Enter Number:</label>
-                <input type="text" id="base-input" class="input" placeholder="e.g., 1111 (for binary)">
-            </div>
-            <button class="btn submit" onclick="convertToDecimal()">Convert to Decimal</button>
-            <div class="result" id="base-result">
-                <div class="result-label">Results will appear here...</div>
-            </div>
-        </section>
-
-        <section id="add-card" class="glass-card">
-            <h2>Add Two Numbers in Any Base</h2>
-            <div class="add-inputs">
+        <div class="main-content">
+            <nav>
+                <button class="btn active" data-target="decimal-card">From Decimal</button>
+                <button class="btn" data-target="to-decimal-card">To Decimal</button>
+                <button class="btn" data-target="add-card">Add Numbers</button>
+                <button class="btn" data-target="encode-card">Encode</button>
+                <button class="btn" data-target="decode-card">Decode</button>
+                <button class="btn" data-target="exit-card">Exit</button>
+            </nav>
+            
+            <section id="decimal-card" class="glass-card active">
+                <h2>Convert Decimal to Binary/Octal/Hex</h2>
                 <div class="input-group">
-                    <label for="add-num1" class="label">First Number:</label>
-                    <input type="text" id="add-num1" class="input" placeholder="e.g., 10">
+                    <label for="decimal-input" class="label">Enter Decimal Number:</label>
+                    <input type="text" id="decimal-input" class="input" placeholder="e.g., 15">
                 </div>
+                <button class="btn submit" onclick="convertFromDecimal()">Convert</button>
+                <div class="result" id="decimal-result">
+                    <div class="result-label">Results will appear here...</div>
+                </div>
+            </section>
+
+            <section id="to-decimal-card" class="glass-card">
+                <h2>Convert Binary/Octal/Hex to Decimal</h2>
                 <div class="input-group">
-                    <label for="add-base1" class="label">Its Base:</label>
-                    <select id="add-base1" class="select">
-                        <option value="2">Binary</option>
-                        <option value="8">Octal</option>
-                        <option value="10">Decimal</option>
-                        <option value="16">Hexadecimal</option>
+                    <label for="base-select" class="label">Select Base:</label>
+                    <select id="base-select" class="select">
+                        <option value="2">Binary (Base 2)</option>
+                        <option value="8">Octal (Base 8)</option>
+                        <option value="16">Hexadecimal (Base 16)</option>
                     </select>
                 </div>
-            </div>
-            <div class="add-inputs">
                 <div class="input-group">
-                    <label for="add-num2" class="label">Second Number:</label>
-                    <input type="text" id="add-num2" class="input" placeholder="e.g., 20">
+                    <label for="base-input" class="label">Enter Number:</label>
+                    <input type="text" id="base-input" class="input" placeholder="e.g., 1111 (for binary)">
                 </div>
-                <div class="input-group">
-                    <label for="add-base2" class="label">Its Base:</label>
-                    <select id="add-base2" class="select">
-                        <option value="2">Binary</option>
-                        <option value="8">Octal</option>
-                        <option value="10">Decimal</option>
-                        <option value="16">Hexadecimal</option>
-                    </select>
+                <button class="btn submit" onclick="convertToDecimal()">Convert to Decimal</button>
+                <div class="result" id="base-result">
+                    <div class="result-label">Results will appear here...</div>
                 </div>
-            </div>
-            <button class="btn submit" onclick="addNumbers()">Calculate</button>
-            <div class="result" id="add-result">
-                <div class="result-label">Results will appear here...</div>
-            </div>
-        </section>
-        
-        <section id="encode-card" class="glass-card">
-            <h2>Secret Code Translator (Encode)</h2>
-            <div class="input-group">
-                <label for="encode-message" class="label">Enter message:</label>
-                <input type="text" id="encode-message" class="input" placeholder="e.g., HELLO">
-            </div>
-            <div class="input-group">
-                <label for="encode-key" class="label">Enter secret key (decimal):</label>
-                <input type="number" id="encode-key" class="input" placeholder="e.g., 5">
-            </div>
-            <button class="btn submit" onclick="encodeMessage()">Encode Message</button>
-            <div class="result" id="encode-result">
-                <div class="result-label">Results will appear here...</div>
-            </div>
-        </section>
-        
-        <section id="decode-card" class="glass-card">
-            <h2>Secret Code Translator (Decode)</h2>
-            <div class="input-group">
-                <label for="decode-values" class="label">Enter encoded decimal values (comma-separated):</label>
-                <input type="text" id="decode-values" class="input" placeholder="e.g., 77, 74, 81, 81, 84">
-            </div>
-            <div class="input-group">
-                <label for="decode-key" class="label">Enter secret key (decimal):</label>
-                <input type="number" id="decode-key" class="input" placeholder="e.g., 5">
-            </div>
-            <button class="btn submit" onclick="decodeMessage()">Decode Message</button>
-            <div class="result" id="decode-result">
-                <div class="result-label">Results will appear here...</div>
-            </div>
-        </section>
-        
-        <section id="exit-card" class="glass-card">
-            <h2>Exit Program</h2>
-            <p>Click the button below to end the session.</p>
-            <button class="btn submit" onclick="exitProgram()">Exit Program</button>
-            <div class="result" id="exit-result">
-                <div class="result-label">Exiting program. Goodbye!</div>
-            </div>
-        </section>
+            </section>
 
+            <section id="add-card" class="glass-card">
+                <h2>Add Two Numbers in Any Base</h2>
+                <div class="add-inputs">
+                    <div class="input-group">
+                        <label for="add-num1" class="label">First Number:</label>
+                        <input type="text" id="add-num1" class="input" placeholder="e.g., 10">
+                    </div>
+                    <div class="input-group">
+                        <label for="add-base1" class="label">Its Base:</label>
+                        <select id="add-base1" class="select">
+                            <option value="2">Binary</option>
+                            <option value="8">Octal</option>
+                            <option value="10">Decimal</option>
+                            <option value="16">Hexadecimal</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="add-inputs">
+                    <div class="input-group">
+                        <label for="add-num2" class="label">Second Number:</label>
+                        <input type="text" id="add-num2" class="input" placeholder="e.g., 20">
+                    </div>
+                    <div class="input-group">
+                        <label for="add-base2" class="label">Its Base:</label>
+                        <select id="add-base2" class="select">
+                            <option value="2">Binary</option>
+                            <option value="8">Octal</option>
+                            <option value="10">Decimal</option>
+                            <option value="16">Hexadecimal</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn submit" onclick="addNumbers()">Calculate</button>
+                <div class="result" id="add-result">
+                    <div class="result-label">Results will appear here...</div>
+                </div>
+            </section>
+            
+            <section id="encode-card" class="glass-card">
+                <h2>Secret Code Translator (Encode)</h2>
+                <div class="input-group">
+                    <label for="encode-message" class="label">Enter message:</label>
+                    <input type="text" id="encode-message" class="input" placeholder="e.g., HELLO">
+                </div>
+                <div class="input-group">
+                    <label for="encode-key" class="label">Enter secret key (decimal):</label>
+                    <input type="number" id="encode-key" class="input" placeholder="e.g., 5">
+                </div>
+                <button class="btn submit" onclick="encodeMessage()">Encode Message</button>
+                <div class="result" id="encode-result">
+                    <div class="result-label">Results will appear here...</div>
+                </div>
+            </section>
+            
+            <section id="decode-card" class="glass-card">
+                <h2>Secret Code Translator (Decode)</h2>
+                <div class="input-group">
+                    <label for="decode-values" class="label">Enter encoded decimal values (comma-separated):</label>
+                    <input type="text" id="decode-values" class="input" placeholder="e.g., 77, 74, 81, 81, 84">
+                </div>
+                <div class="input-group">
+                    <label for="decode-key" class="label">Enter secret key (decimal):</label>
+                    <input type="number" id="decode-key" class="input" placeholder="e.g., 5">
+                </div>
+                <button class="btn submit" onclick="decodeMessage()">Decode Message</button>
+                <div class="result" id="decode-result">
+                    <div class="result-label">Results will appear here...</div>
+                </div>
+            </section>
+            
+            <section id="exit-card" class="glass-card">
+                <h2>Exit Program</h2>
+                <p>Click the button below to end the session.</p>
+                <button class="btn submit" onclick="exitProgram()">Exit Program</button>
+                <div class="result" id="exit-result">
+                    <div class="result-label">Exiting program. Goodbye!</div>
+                </div>
+            </section>
+        </div>
     </div>
 
     <script>
@@ -668,16 +672,12 @@
         // Add enter key support
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                if (document.getElementById('decimal-card').classList.contains('active')) {
-                    convertFromDecimal();
-                } else if (document.getElementById('to-decimal-card').classList.contains('active')) {
-                    convertToDecimal();
-                } else if (document.getElementById('add-card').classList.contains('active')) {
-                    addNumbers();
-                } else if (document.getElementById('encode-card').classList.contains('active')) {
-                    encodeMessage();
-                } else if (document.getElementById('decode-card').classList.contains('active')) {
-                    decodeMessage();
+                const activeCard = document.querySelector('.glass-card.active');
+                if (activeCard) {
+                    const submitButton = activeCard.querySelector('.btn.submit');
+                    if (submitButton) {
+                        submitButton.click();
+                    }
                 }
             }
         });
