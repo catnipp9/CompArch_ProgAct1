@@ -1,122 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Number System Converter</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #333;
-    }
-    .menu {
-      margin: 20px auto;
-      width: 400px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    #output {
-      margin-top: 20px;
-      padding: 15px;
-      background: #eee;
-      border-radius: 8px;
-      text-align: left;
-      white-space: pre-line;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Base Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-color: #f0f0f0;
+            --highlight-color: #8c7ae6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --gradient-1: #2c3e50;
+            --gradient-2: #34495e;
+            --gradient-3: #2c3e50;
+        }
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2), var(--gradient-3));
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+ 
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: -1;
+        }
+ 
+        .container {
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+        }
+ 
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px var(--shadow-color);
+            padding: 30px;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+ 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+ 
+        .glass-card.active {
+            display: flex;
+        }
+ 
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+ 
+        .title {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin-bottom: 5px;
+        }
+ 
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+ 
+        nav {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 4px 16px var(--shadow-color);
+            margin-bottom: 20px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+ 
+        nav .btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        nav .btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+ 
+        nav .btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+ 
+        .input-group {
+            margin-bottom: 15px;
+        }
+ 
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+ 
+        .input, .select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+ 
+        .input:focus, .select:focus {
+            outline: none;
+            background: rgba(0, 0, 0, 0.4);
+            border-color: var(--highlight-color);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3), 0 0 10px rgba(140, 122, 230, 0.5);
+        }
+        
+        .select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f0f0f0' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+ 
+        .btn.submit {
+            background: var(--highlight-color);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(140, 122, 230, 0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+ 
+        .btn.submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(140, 122, 230, 0.6);
+            filter: brightness(1.1);
+        }
+ 
+        .btn.submit:active {
+            transform: translateY(0);
+        }
+ 
+        .result {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 60px;
+            font-weight: 500;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            word-break: break-all;
+        }
+ 
+        .result-label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            opacity: 0.7;
+        }
+ 
+        .result-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .add-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+ 
+        .error {
+            border-color: #ff6b6b !important;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5) !important;
+        }
+ 
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                padding: 5px;
+            }
+ 
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Number System Menu</h1>
-  <div class="menu">
-    <button onclick="decimalToOthers()">1. Convert Decimal to Binary/Octal/Hex</button>
-    <button onclick="othersToDecimal()">2. Convert Binary/Octal/Hex to Decimal</button>
-    <button onclick="addNumbers()">3. Add Two Numbers in Any Base</button>
-    <button onclick="encodeMessage()">4. Secret Code Translator (Encode)</button>
-    <button onclick="decodeMessage()">5. Secret Code Translator (Decode)</button>
-    <button onclick="exitProgram()">6. Exit</button>
-  </div>
-  <div id="output"></div>
-
-  <script>
-    function decimalToOthers() {
-      let num = parseInt(prompt("Enter decimal number:"));
-      let bin = num.toString(2);
-      let oct = num.toString(8);
-      let hex = num.toString(16).toUpperCase();
-      document.getElementById("output").innerText =
-        `Decimal: ${num}\nBinary: ${bin}\nOctal: ${oct}\nHex: ${hex}`;
-    }
-
-    function othersToDecimal() {
-      let value = prompt("Enter number:");
-      let base = parseInt(prompt("Enter its base (2, 8, 10, 16):"));
-      let dec = parseInt(value, base);
-      document.getElementById("output").innerText = `Decimal: ${dec}`;
-    }
-
-    function addNumbers() {
-      let num1 = prompt("Enter first number:");
-      let base1 = parseInt(prompt("Enter its base (2, 8, 10, 16):"));
-      let num2 = prompt("Enter second number:");
-      let base2 = parseInt(prompt("Enter its base (2, 8, 10, 16):"));
-
-      let dec1 = parseInt(num1, base1);
-      let dec2 = parseInt(num2, base2);
-      let sum = dec1 + dec2;
-
-      document.getElementById("output").innerText =
-        `Results of Addition:\nDecimal: ${sum}\nBinary: ${sum.toString(2)}\nOctal: ${sum.toString(8)}\nHex: ${sum.toString(16).toUpperCase()}`;
-    }
-
-    function encodeMessage() {
-      let msg = prompt("Enter message:");
-      let key = parseInt(prompt("Enter secret key (decimal):"));
-      let encodedDec = [];
-      let encodedHex = [];
-
-      for (let char of msg) {
-        let code = char.charCodeAt(0) + key;
-        encodedDec.push(code);
-        encodedHex.push(code.toString(16).toUpperCase());
-      }
-
-      document.getElementById("output").innerText =
-        `Encoded (decimal values): [${encodedDec.join(", ")}]\nEncoded (hex values): [${encodedHex.join(", ")}]`;
-    }
-
-    function decodeMessage() {
-      let values = prompt("Enter encoded decimal values (comma separated):");
-      let key = parseInt(prompt("Enter secret key (decimal):"));
-      let nums = values.split(",").map(v => parseInt(v.trim()));
-      let decoded = nums.map(n => String.fromCharCode(n - key)).join("");
-      document.getElementById("output").innerText =
-        `Decoded Message: ${decoded}`;
-    }
-
-    function exitProgram() {
-      document.getElementById("output").innerText = "Exiting program. Goodbye!";
-    }
-  </script>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Glass Converter</h1>
+            <p class="subtitle">Aesthetic Base & Number Calculator</p>
+        </div>
+ 
+        <nav>
+            <button class="btn active" data-target="decimal-card">From Decimal</button>
+            <button class="btn" data-target="to-decimal-card">To Decimal</button>
+            <button class="btn" data-target="add-card">Add Numbers</button>
+        </nav>
+ 
+        <section id="decimal-card" class="glass-card active">
+            <h2>Decimal Converter</h2>
+            <div class="input-group">
+                <label for="decimal-input" class="label">Enter Decimal Number:</label>
+                <input type="text" id="decimal-input" class="input" placeholder="e.g., 15">
+            </div>
+            <button class="btn submit" onclick="convertFromDecimal()">Convert</button>
+            <div class="result" id="decimal-result">
+                <div class="result-label">Results will appear here...</div>
+            </div>
+        </section>
+ 
+        <section id="to-decimal-card" class="glass-card">
+            <h2>To Decimal Converter</h2>
+            <div class="input-group">
+                <label for="base-select" class="label">Select Base:</label>
+                <select id="base-select" class="select">
+                    <option value="2">Binary (Base 2)</option>
+                    <option value="8">Octal (Base 8)</option>
+                    <option value="16">Hexadecimal (Base 16)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="base-input" class="label">Enter Number:</label>
+                <input type="text" id="base-input" class="input" placeholder="e.g., 1111 (for binary)">
+            </div>
+            <button class="btn submit" onclick="convertToDecimal()">Convert to Decimal</button>
+            <div class="result" id="base-result">
+                <div class="result-label">Results will appear here...</div>
+            </div>
+        </section>
+ 
+        <section id="add-card" class="glass-card">
+            <h2>Add Numbers (Any Base)</h2>
+            <div class="input-group">
+                <label for="add-base" class="label">Select Base for Calculation:</label>
+                <select id="add-base" class="select">
+                    <option value="2">Binary</option>
+                    <option value="8">Octal</option>
+                    <option value="10">Decimal</option>
+                    <option value="16">Hexadecimal</option>
+                </select>
+            </div>
+            <div class="add-inputs">
+                <div class="input-group">
+                    <label for="add-num1" class="label">First Number:</label>
+                    <input type="text" id="add-num1" class="input" placeholder="e.g., 10">
+                </div>
+                <div class="input-group">
+                    <label for="add-num2" class="label">Second Number:</label>
+                    <input type="text" id="add-num2" class="input" placeholder="e.g., 20">
+                </div>
+                <div class="input-group">
+                    <label for="result-base" class="label">Result Base:</label>
+                    <select id="result-base" class="select">
+                        <option value="2">Binary</option>
+                        <option value="8">Octal</option>
+                        <option value="10">Decimal</option>
+                        <option value="16">Hexadecimal</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn submit" onclick="addNumbers()">Calculate</button>
+            <div class="result" id="add-result">
+                <div class="result-label">Results will appear here...</div>
+            </div>
+        </section>
+    </div>
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('nav .btn');
+            const sections = document.querySelectorAll('.glass-card');
+ 
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Hide all sections and deactivate all buttons
+                    sections.forEach(s => s.classList.remove('active'));
+                    navButtons.forEach(b => b.classList.remove('active'));
+ 
+                    // Show the target section and activate the clicked button
+                    const targetId = button.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                    button.classList.add('active');
+                });
+            });
+        });
+ 
+        function isValidNumber(num, base) {
+            if (!num || num.trim() === '') return false;
+            
+            const cleanNum = num.trim().toUpperCase();
+            const validPatterns = {
+                2: /^[01]+$/,
+                8: /^[0-7]+$/,
+                10: /^[0-9]+$/,
+                16: /^[0-9A-F]+$/
+            };
+            
+            return validPatterns[base] ? validPatterns[base].test(cleanNum) : false;
+        }
+ 
+        function convertFromDecimal() {
+            const input = document.getElementById('decimal-input');
+            const result = document.getElementById('decimal-result');
+            const value = input.value.trim();
+            
+            input.classList.remove('error');
+            
+            if (!isValidNumber(value, 10)) {
+                input.classList.add('error');
+                result.innerHTML = '<div class="result-label error">❌ Invalid decimal number!</div>';
+                return;
+            }
+            
+            const decimal = parseInt(value, 10);
+            
+            const binary = decimal.toString(2);
+            const octal = decimal.toString(8);
+            const hex = decimal.toString(16).toUpperCase();
+            
+            result.innerHTML = `
+                <div class="result-label">CONVERSION RESULTS:</div>
+                <div class="result-value">
+                    Binary: ${binary}<br>
+                    Octal: ${octal}<br>
+                    Hexadecimal: ${hex}
+                </div>
+            `;
+        }
+ 
+        function convertToDecimal() {
+            const baseSelect = document.getElementById('base-select');
+            const input = document.getElementById('base-input');
+            const result = document.getElementById('base-result');
+            
+            const base = parseInt(baseSelect.value);
+            const value = input.value.trim();
+            
+            input.classList.remove('error');
+            
+            if (!isValidNumber(value, base)) {
+                input.classList.add('error');
+                const baseName = base === 2 ? 'binary' : base === 8 ? 'octal' : 'hexadecimal';
+                result.innerHTML = `<div class="result-label error">❌ Invalid ${baseName} number!</div>`;
+                return;
+            }
+            
+            const decimal = parseInt(value, base);
+            const baseName = { 2: 'Binary', 8: 'Octal', 16: 'Hexadecimal' }[base];
+            
+            result.innerHTML = `
+                <div class="result-label">CONVERSION RESULT:</div>
+                <div class="result-value">
+                    ${baseName} ${value} = Decimal ${decimal}
+                </div>
+            `;
+        }
+ 
+        function addNumbers() {
+            const addBase = parseInt(document.getElementById('add-base').value);
+            const resultBase = parseInt(document.getElementById('result-base').value);
+            const num1Input = document.getElementById('add-num1');
+            const num2Input = document.getElementById('add-num2');
+            const result = document.getElementById('add-result');
+            
+            const num1 = num1Input.value.trim();
+            const num2 = num2Input.value.trim();
+            
+            num1Input.classList.remove('error');
+            num2Input.classList.remove('error');
+            
+            let hasError = false;
+            
+            if (!isValidNumber(num1, addBase)) {
+                num1Input.classList.add('error');
+                hasError = true;
+            }
+            
+            if (!isValidNumber(num2, addBase)) {
+                num2Input.classList.add('error');
+                hasError = true;
+            }
+            
+            if (hasError) {
+                const baseName = { 2: 'binary', 8: 'octal', 10: 'decimal', 16: 'hexadecimal' }[addBase];
+                result.innerHTML = `<div class="result-label error">❌ Please enter valid ${baseName} numbers!</div>`;
+                return;
+            }
+            
+            const decimal1 = parseInt(num1, addBase);
+            const decimal2 = parseInt(num2, addBase);
+            const sum = decimal1 + decimal2;
+            
+            const resultValue = sum.toString(resultBase).toUpperCase();
+            
+            const baseNames = {
+                2: 'Binary',
+                8: 'Octal',
+                10: 'Decimal',
+                16: 'Hexadecimal'
+            };
+            
+            result.innerHTML = `
+                <div class="result-label">ADDITION RESULT:</div>
+                <div class="result-value">
+                    ${num1} (${baseNames[addBase]}) + ${num2} (${baseNames[addBase]}) = ${resultValue} (${baseNames[resultBase]})
+                </div>
+            `;
+        }
+        
+        // Add enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (e.target.id === 'decimal-input') {
+                    convertFromDecimal();
+                } else if (e.target.id === 'base-input') {
+                    convertToDecimal();
+                } else if (e.target.id === 'add-num1' || e.target.id === 'add-num2') {
+                    addNumbers();
+                }
+            }
+        });
+    </script>
 </body>
 </html>
