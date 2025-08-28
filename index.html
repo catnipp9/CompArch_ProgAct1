@@ -46,7 +46,7 @@
             width: 100%;
             height: 100%;
             background-image: radial-gradient(circle, rgba(215, 168, 255, 0.2) 0%, transparent 40%),
-                              radial-gradient(circle, rgba(255, 0, 162, 0.2) 0%, transparent 40%);
+                                 radial-gradient(circle, rgba(255, 0, 162, 0.2) 0%, transparent 40%);
             background-size: 50% 50%, 50% 50%;
             background-position: top left, bottom right;
             pointer-events: none;
@@ -308,7 +308,7 @@
         <div class="header">
             <h1 class="title">Number System Converter</h1>
             <p class="subtitle">CPE463 - Programming Activity 1</p>
-	    <p class="author">Jamel P. Hadjirasul   BSCPE - 4</p>
+            <p class="author">Jamel P. Hadjirasul   BSCPE - 4</p>
         </div>
 
         <div class="main-content">
@@ -325,7 +325,7 @@
                 <h2>Convert Decimal to Binary/Octal/Hex</h2>
                 <div class="input-group">
                     <label for="decimal-input" class="label">Enter Decimal Number:</label>
-                    <input type="text" id="decimal-input" class="input" placeholder="e.g., 15">
+                    <input type="text" id="decimal-input" class="input" placeholder="e.g., 15.5 or 15">
                 </div>
                 <button class="btn submit" onclick="convertFromDecimal()">Convert</button>
                 <div class="result" id="decimal-result">
@@ -345,7 +345,7 @@
                 </div>
                 <div class="input-group">
                     <label for="base-input" class="label">Enter Number:</label>
-                    <input type="text" id="base-input" class="input" placeholder="e.g., 1111 (for binary)">
+                    <input type="text" id="base-input" class="input" placeholder="e.g., 1111.1 (for binary)">
                 </div>
                 <button class="btn submit" onclick="convertToDecimal()">Convert to Decimal</button>
                 <div class="result" id="base-result">
@@ -358,7 +358,7 @@
                 <div class="add-inputs">
                     <div class="input-group">
                         <label for="add-num1" class="label">First Number:</label>
-                        <input type="text" id="add-num1" class="input" placeholder="e.g., 10">
+                        <input type="text" id="add-num1" class="input" placeholder="e.g., 10.5">
                     </div>
                     <div class="input-group">
                         <label for="add-base1" class="label">Its Base:</label>
@@ -373,7 +373,7 @@
                 <div class="add-inputs">
                     <div class="input-group">
                         <label for="add-num2" class="label">Second Number:</label>
-                        <input type="text" id="add-num2" class="input" placeholder="e.g., 20">
+                        <input type="text" id="add-num2" class="input" placeholder="e.g., 20.25">
                     </div>
                     <div class="input-group">
                         <label for="add-base2" class="label">Its Base:</label>
@@ -454,15 +454,47 @@
             });
         });
 
+        // Helper function to convert a fractional part of a number from a given base to decimal
+        function fracToDecimal(fracPart, base) {
+            let decimalValue = 0;
+            const hexMap = { 'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15 };
+            
+            for (let i = 0; i < fracPart.length; i++) {
+                let digit = fracPart[i].toUpperCase();
+                let value = base === 16 ? (hexMap[digit] || parseInt(digit)) : parseInt(digit);
+                decimalValue += value * Math.pow(base, -(i + 1));
+            }
+            return decimalValue;
+        }
+
+        // Helper function to convert a decimal fractional part to a given base
+        function decimalFracToBase(fracPart, base) {
+            let result = '';
+            const precision = 10; // Set a reasonable precision to avoid infinite loops
+            let fractional = parseFloat('0.' + fracPart);
+            const hexDigits = '0123456789ABCDEF';
+
+            for (let i = 0; i < precision; i++) {
+                if (fractional === 0) break;
+                fractional *= base;
+                let integerPart = Math.floor(fractional);
+                result += hexDigits[integerPart];
+                fractional -= integerPart;
+            }
+            return result;
+        }
+
+        // Modified isValidNumber to allow a single decimal point
         function isValidNumber(num, base) {
             if (!num || num.trim() === '') return false;
             
             const cleanNum = num.trim().toUpperCase();
+            // Regex now includes an optional decimal point and more characters
             const validPatterns = {
-                2: /^[01]+$/,
-                8: /^[0-7]+$/,
-                10: /^[0-9]+$/,
-                16: /^[0-9A-F]+$/
+                2: /^[01]+(\.[01]+)?$/,
+                8: /^[0-7]+(\.[0-7]+)?$/,
+                10: /^[0-9]+(\.[0-9]+)?$/,
+                16: /^[0-9A-F]+(\.[0-9A-F]+)?$/
             };
             
             return validPatterns[base] ? validPatterns[base].test(cleanNum) : false;
@@ -480,10 +512,22 @@
                 return;
             }
             
-            const decimal = parseInt(value, 10);
-            const binary = decimal.toString(2);
-            const octal = decimal.toString(8);
-            const hex = decimal.toString(16).toUpperCase();
+            const [intPart, fracPart = ''] = value.split('.');
+            const decimalInt = parseInt(intPart, 10);
+            
+            // Convert integer part
+            const binaryInt = decimalInt.toString(2);
+            const octalInt = decimalInt.toString(8);
+            const hexInt = decimalInt.toString(16).toUpperCase();
+
+            // Convert fractional part
+            const binaryFrac = decimalFracToBase(fracPart, 2);
+            const octalFrac = decimalFracToBase(fracPart, 8);
+            const hexFrac = decimalFracToBase(fracPart, 16);
+
+            const binary = binaryInt + (binaryFrac ? '.' + binaryFrac : '');
+            const octal = octalInt + (octalFrac ? '.' + octalFrac : '');
+            const hex = hexInt + (hexFrac ? '.' + hexFrac : '');
             
             result.innerHTML = `
                 <span class="icon success">✅</span>
@@ -511,14 +555,23 @@
                 return;
             }
             
-            const decimal = parseInt(value, base);
+            const [intPart, fracPart = ''] = value.split('.');
+            
+            // Convert integer part
+            const decimalInt = parseInt(intPart, base);
+            
+            // Convert fractional part
+            const decimalFrac = fracToDecimal(fracPart, base);
+            
+            const decimal = decimalInt + decimalFrac;
+
             const baseName = { 2: 'Binary', 8: 'Octal', 16: 'Hexadecimal' }[base];
             
             result.innerHTML = `
                 <span class="icon success">✅</span>
                 <div class="result-value">
                     <div class="result-label">CONVERSION RESULT:</div>
-                    ${baseName} ${value} = Decimal ${decimal}
+                    ${baseName} ${value} = Decimal ${decimal.toFixed(10).replace(/\.?0+$/, '')}
                 </div>
             `;
         }
@@ -555,13 +608,20 @@
                 return;
             }
 
-            const decimal1 = parseInt(num1, base1);
-            const decimal2 = parseInt(num2, base2);
-            const sum = decimal1 + decimal2;
+            // Convert both numbers to decimal for addition
+            const [num1Int, num1Frac = ''] = num1.split('.');
+            const [num2Int, num2Frac = ''] = num2.split('.');
             
-            const binaryResult = sum.toString(2);
-            const octalResult = sum.toString(8);
-            const hexResult = sum.toString(16).toUpperCase();
+            const decimal1 = parseInt(num1Int, base1) + fracToDecimal(num1Frac, base1);
+            const decimal2 = parseInt(num2Int, base2) + fracToDecimal(num2Frac, base2);
+            
+            const sum = decimal1 + decimal2;
+            const [sumInt, sumFrac] = sum.toString().split('.');
+
+            // Convert sum back to other bases, handling both integer and fractional parts
+            const binaryResult = parseInt(sumInt, 10).toString(2) + (sumFrac ? '.' + decimalFracToBase(sumFrac, 2) : '');
+            const octalResult = parseInt(sumInt, 10).toString(8) + (sumFrac ? '.' + decimalFracToBase(sumFrac, 8) : '');
+            const hexResult = parseInt(sumInt, 10).toString(16).toUpperCase() + (sumFrac ? '.' + decimalFracToBase(sumFrac, 16) : '');
 
             result.innerHTML = `
                 <span class="icon success">✅</span>
