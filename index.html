@@ -411,7 +411,7 @@
                 <h2>Secret Code Translator (Decode)</h2>
                 <div class="input-group">
                     <label for="decode-values" class="label">Encoded decimal values:</label>
-                    <input type="text" id="decode-values" class="input" value="77, 74, 81, 81, 84" readonly>
+                    <input type="text" id="decode-values" class="input" value="" readonly>
                 </div>
                 <div class="input-group">
                     <label for="decode-key" class="label">Enter secret key (decimal):</label>
@@ -435,6 +435,9 @@
     </div>
 
     <script>
+        // Global variable to store encoded values
+        let encodedValues = [];
+
         document.addEventListener('DOMContentLoaded', () => {
             const navButtons = document.querySelectorAll('nav .btn');
             const sections = document.querySelectorAll('.glass-card');
@@ -665,6 +668,9 @@
                 decimalValues.push(encodedValue);
                 hexValues.push(encodedValue.toString(16).toUpperCase());
             }
+
+            // Store encoded decimal values globally
+            encodedValues = decimalValues;
             
             result.innerHTML = `
                 <span class="icon success">✅</span>
@@ -681,10 +687,13 @@
             const keyInput = document.getElementById('decode-key');
             const result = document.getElementById('decode-result');
             
-            // The encoded values are now read from the pre-filled input
-            const valuesString = valuesInput.value.trim();
+            // Check if there are values to decode
+            if (encodedValues.length === 0) {
+                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">No encoded values found. Please encode a message first!</div>`;
+                return;
+            }
+
             const key = parseInt(keyInput.value, 10);
-            
             keyInput.classList.remove('error');
             
             if (isNaN(key)) {
@@ -693,20 +702,14 @@
                 return;
             }
             
-            const decimalValues = valuesString.split(',').map(s => parseInt(s.trim()));
-            
-            if (decimalValues.some(isNaN)) {
-                // This check is a safeguard, but with a static value, it shouldn't be triggered
-                valuesInput.classList.add('error');
-                result.innerHTML = `<span class="icon error">❌</span> <div class="result-label error">Invalid input format! Please enter comma-separated numbers.</div>`;
-                return;
-            }
-            
             let decodedMessage = '';
-            for (const value of decimalValues) {
+            for (const value of encodedValues) {
                 const decodedAscii = value - key;
                 decodedMessage += String.fromCharCode(decodedAscii);
             }
+
+            // Display the decoded message
+            valuesInput.value = encodedValues.join(', ');
             
             result.innerHTML = `
                 <span class="icon success">✅</span>
@@ -715,7 +718,7 @@
                     Decoded Message: ${decodedMessage}
                 </div>
             `;
-            }
+        }
         
         function exitProgram() {
             const container = document.querySelector('.container');
